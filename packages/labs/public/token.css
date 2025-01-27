@@ -1,0 +1,9 @@
+:root {
+    --color-background: blanchedalmond;
+    --color-accent: rgb(238, 194, 128);
+    --color-link: blue;
+    --color-link-inverted: purple;
+    --color-text: brown;
+    --font-cour: 'Courier New', Courier, monospace;
+    --font-treb: 'Trebuchet MS'
+}

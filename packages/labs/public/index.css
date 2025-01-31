@@ -4,12 +4,8 @@
 
 body {
   background-color: var(--color-background);
-}
-header {
-  /* background-color:rgb(238, 194, 128);  */
-  font-size: 1.5rem;
   font-family: var(--font-cour);
-  color:black;
+  font-size: 1.5rem;
 }
 
 .name {
@@ -91,3 +87,7 @@ header {
   margin: 0 0 0 2em;
 }
 
+a {
+  color: blue;
+  text-decoration: none;
+}

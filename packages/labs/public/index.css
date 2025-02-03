@@ -6,62 +6,39 @@ body {
   background-color: var(--color-background);
   font-family: var(--font-cour);
   font-size: 1.5rem;
-}
-
-.name {
-  font-size: 1.5em;
-  font-family: var(--font-cour);
+  color: var(--color-text);
 }
 
 .sections {
   font-family: var(--font-cour);
   font-size: 2rem;
-  color: var(--color-text);
+  color: var(--color-heading);
   line-height: 2em;
 }
 
 .hobby {
   font-family: var(--font-cour);
   font-size: 1.25rem;
-  color:black;
-  margin: 0 0 0 2em
-}
-
-.interaction {
-  color:black;
+  color: var(--color-text);
   margin: 0 0 0 2em
 }
 
 .label {
   font-family: var(--font-cour);
   font-size: 1.25rem;
-  color: black;
+  color: var(--color-text);
 }
 
 .at {
   font-family: var(--font-treb);
-  color: var(--color-text);
+  color: var(--color-heading);
   margin: 0 0 0 2em;
 }
 
 .value {
   font-family: var(--font-treb);
-  color: var(--color-text);
+  color: var(--color-heading);
   margin: 0 0 0 2em;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-around;
-  align-items: baseline;
-  padding: 1.5em 0;
-  margin: 0 0 1.5em 0;
-  background-color: var(--color-accent);
-}
-
-.name {
-  font-size: xx-large;
-  font-weight:bolder;
 }
 
 .maingrid {
@@ -85,9 +62,4 @@ body {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
   margin: 0 0 0 2em;
-}
-
-a {
-  color: blue;
-  text-decoration: none;
 }

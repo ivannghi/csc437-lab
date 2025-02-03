@@ -73,8 +73,8 @@ window.addEventListener("load", () => { // Create a function on the fly
     // Code in this function will run once the page is done loading
 
     
-    const navbar = createNav();
-    document.body.prepend(navbar);
+    // const navbar = createNav();
+    // document.body.prepend(navbar);
 
     markCurrentPage();
 });

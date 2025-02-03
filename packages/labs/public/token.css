@@ -3,7 +3,17 @@
     --color-accent: rgb(238, 194, 128);
     --color-link: blue;
     --color-link-inverted: purple;
-    --color-text: brown;
+    --color-heading: brown;
+    --color-text: black;
     --font-cour: 'Courier New', Courier, monospace;
     --font-treb: 'Trebuchet MS'
+}
+
+body.dark-mode {
+    --color-background: rgb(0,20,50);
+    --color-accent: rgb(17,61,127);
+    --color-link: #e5e915;
+    --color-link-inverted: #f0f0bc;
+    --color-heading: rgb(90,214,213);
+    --color-text: white;
 }

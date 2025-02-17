@@ -8,7 +8,7 @@ const DATA = [
   { id: "todo-1", name: "Sleep", completed: false },
   { id: "todo-2", name: "Repeat", completed: false },
 ];
-console.log(DATA);
+// console.log(DATA);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

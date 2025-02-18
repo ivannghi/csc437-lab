@@ -6,15 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import TodoItem from "./components/Todo";
 import AddTaskForm from './components/AddTaskForm';
-// import addTask from './components/AddTask';
+import Modal from './components/modal';
 import { useState } from 'react';
 import { nanoid } from "nanoid";
+import { GroceryPanel } from './components/GroceryPanel';
 
 
 library.add(fas)
 
 function App(props) {
     const [taskList, setTaskList] = useState(props.tasks); 
+    const [modalStatus, setModalStatus] = useState(false);
 
     const taskComponents = taskList.map((task) => (
         <TodoItem 
@@ -52,15 +54,27 @@ function App(props) {
         setTaskList(updatedTasks);
     }
 
+    function onCloseRequested() {
+        setModalStatus(false);
+    }
+
+    function openAddTask() {
+        setModalStatus(true);
+    }
+
     return (
         <main className="m-4"> {/* Tailwind: margin level 4 on all sides */}
-            <AddTaskForm onNewTask={addTask} placeholder="New task here" button="Add task"/>
+            <Modal isOpen={modalStatus} onCloseRequested={onCloseRequested} headerLabel="New Task">
+                <AddTaskForm onNewTask={addTask} placeholder="New task here" button="Add task"/>
+            </Modal>
             <section>
+            <button onClick={openAddTask} className="bg-blue-600 rounded-md py-1 text-white px-2">Add Task</button>
                 <h1 className="text-xl font-bold my-2">To do</h1>
                 <ul>
                     {taskComponents}
                 </ul>
             </section>
+            <GroceryPanel onAddTask={addTask}></GroceryPanel>
         </main>
     );
 }

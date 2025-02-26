@@ -1,63 +1,20 @@
-import React from 'react';
-import { useNavigate } from 'react-router'; // Correct import
+import React from "react";
+import Sidebar from "../sidebar/sidebar"; // Import Sidebar component
+import "./workouthome.css";
 
 const WorkoutHome = () => {
-    const navigate = useNavigate(); // Initialize navigate
-
-    const handleBackButton = () => {
-        navigate('/home');  // Navigate to Home page
-    };
+    const workoutLinks = [
+        { path: "/buildworkout", label: "Build Workout" },
+        { path: "/premadeworkouts", label: "Premade Workouts" },
+        { path: "/freeworkout", label: "Free Workout" },
+        { path: "/pastworkouts", label: "Past Workouts" }
+    ];
 
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            // alignItems: 'center', 
-            height: '100vh' // Make sure the container takes full viewport height
-        }}>
-            {/* Center content horizontally and vertically */}
-            <div className="text-center p-8 bg-white rounded-lg shadow-lg w-full max-w-md text-red-500">
-                <h1 style={{
-                    textAlign: 'center', // Center the text horizontally
-                    marginBottom: '20px'
-                }}>
-                    Workout Home
-                </h1>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                    <button
-                        onClick={() => navigate('/buildworkout')}
-                    >
-                        Build Workout
-                    </button>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                    <button
-                        onClick={() => navigate('/premadeworkouts')}
-                    >
-                        Premade Workouts
-                    </button>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                    <button
-                        onClick={() => navigate('/freeworkout')}
-                    >
-                        Free Workout
-                    </button>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                    <button
-                        onClick={() => navigate('/pastworkouts')}
-                    >
-                        View Past Workouts
-                    </button>
-                </div>
-                <div className="fixed-bottom-left">
-                    <button
-                        onClick={handleBackButton}
-                    >
-                        Home
-                    </button>
-                </div>
+        <div className="container">
+            <Sidebar links={workoutLinks} />
+            <div class="content">
+                <h1>Welcome to Workout Home</h1>
             </div>
         </div>
     );

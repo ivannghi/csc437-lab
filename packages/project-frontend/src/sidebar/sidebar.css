@@ -2,10 +2,11 @@
     display: flex;
     flex-direction: column;
     width: 20vw;
-    height: 100vh;
+    height: 90vh;
     gap: 1rem;
     background-color: #f3f4f6;
     padding: 1rem;
+    /* overflow-y: hidden; */
 }
 
 .sidebar-link {

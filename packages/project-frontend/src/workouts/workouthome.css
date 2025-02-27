@@ -1,12 +1,17 @@
-.container {
+.outside {
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
 }
 
+.sidebar {
+    justify-self: left;
+}
+
 .content {
-    justify-self: center;
+    flex-grow: 1;  /* Take up remaining space */
+    display: flex;
+    justify-content: center; 
     padding: 2rem;
-    flex-grow: 1;
 }

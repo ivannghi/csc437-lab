@@ -68,13 +68,9 @@ const BuildWorkoutPage = () => {
     };
 
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            height: '100vh'
-        }}>
-            <div className="text-center p-8 bg-white rounded-lg shadow-lg w-full max-w-md">
-                <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Build Workout</h1>
+        <div >
+            <div className="centeritems">
+                <h1 >Build Workout</h1>
 
                 {/* Centered Form */}
                 <div className="form-container">
@@ -117,8 +113,8 @@ const BuildWorkoutPage = () => {
                                 <li key={index} className="exercise-item">
                                     {exercise}
                                     <div className="exercise-buttons">
-                                        <button onClick={() => handleEditExercise(index)} className="edit-btn">Edit</button>
-                                        <button onClick={() => handleDeleteExercise(index)} className="delete-btn">Delete</button>
+                                        <button onClick={() => handleEditExercise(index)} className="interactive-btn bg-orange-300 text-white">Edit</button>
+                                        <button onClick={() => handleDeleteExercise(index)} className="interactive-btn bg-red-500 text-white">Delete</button>
                                     </div>
                                 </li>
                             ))}
@@ -130,14 +126,17 @@ const BuildWorkoutPage = () => {
                 {error && <p className="error-message">{error}</p>}
 
                 {/* Buttons */}
-                <div className="fixed-bottom-left">
-                    <button onClick={() => navigate('/workouthome')}>Cancel</button>
-                </div>
-                <div className="fixed-bottom-right">
-                    <button onClick={handleSaveWorkout}>Save Workout</button>
+                <div className="submit-btns">
+                    <div className="interactive-btn bg-red-500 text-black">
+                        <button onClick={() => navigate('/workouthome')}>Cancel</button>
+                    </div>
+                    <div className="interactive-btn bg-green-500 text-black">
+                        <button onClick={handleSaveWorkout}>Save Workout</button>
+                    </div>
                 </div>
             </div>
         </div>
+            
     );
 };
 

@@ -9,6 +9,7 @@ import WorkoutHome from './workouts/workouthome';
 import Layout from './navbar/Layout';
 import CaloriesHome from './calories/calorieshome';
 import BuildWorkoutPage from './workouts/buildWorkout';
+import WorkoutLayout from './workouts/WorkoutLayout';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,8 +22,10 @@ function App() {
         {/* Wrap all other pages inside Layout */}
         <Route element={<Layout />}>
             <Route path="/home" element={<HomePage />} />
-            <Route path="/workouthome" element={<WorkoutHome />} />
-            <Route path="/buildworkout" element={<BuildWorkoutPage/>} />
+            <Route element={<WorkoutLayout />}>
+              <Route path="/workouthome" element={<WorkoutHome />} />
+              <Route path="/buildworkout" element={<BuildWorkoutPage/>} />
+            </Route>
             <Route path="/calorieshome" element={<CaloriesHome />} />
         </Route>
     </Routes>

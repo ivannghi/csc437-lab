@@ -36,7 +36,11 @@ export function Navbar() {
                 </Link>
                 <Link 
                     to='/workouthome' 
-                    className={location.pathname === "/workouthome" ? "active-link" : ""}
+                    className={location.pathname === "/workouthome" 
+                        || location.pathname === "/buildworkout" 
+                        || location.pathname === "/premadeworkouts" 
+                        || location.pathname === "/freeworkout" 
+                        || location.pathname === "/pastworkouts" ? "active-link" : ""}
                 >
                     Workouts
                 </Link>

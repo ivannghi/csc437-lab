@@ -10,6 +10,9 @@ import Layout from './navbar/Layout';
 import CaloriesHome from './calories/calorieshome';
 import BuildWorkoutPage from './workouts/buildWorkout';
 import WorkoutLayout from './workouts/WorkoutLayout';
+import PremadeWorkoutsPage from './workouts/premadeWorkouts';
+import FreeWorkout from './workouts/freeWorkout';
+import ViewPastPage from './workouts/pastWorkouts';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +28,11 @@ function App() {
             <Route element={<WorkoutLayout />}>
               <Route path="/workouthome" element={<WorkoutHome />} />
               <Route path="/buildworkout" element={<BuildWorkoutPage/>} />
+              <Route path="/premadeworkouts" element={<PremadeWorkoutsPage />} />  
+              <Route path="/freeworkout" element={<FreeWorkout />} />  
+              <Route path="/pastworkouts" element={<ViewPastPage />} />  
+
+
             </Route>
             <Route path="/calorieshome" element={<CaloriesHome />} />
         </Route>

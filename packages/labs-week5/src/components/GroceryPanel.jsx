@@ -1,6 +1,6 @@
 import React from "react";
 import { Spinner } from "./Spinner";
-
+import { useGroceryFetch } from "./useGroceryFetch";
 const MDN_URL = "https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json";
 
 /**
@@ -14,19 +14,15 @@ function delayMs(ms) {
 }
 
 export function GroceryPanel(props) {
-    const [groceryData, setGroceryData] = React.useState([
-        {
-            name: "test item",
-            price: 12.3
-        },
-        {
-            name: "test item 2",
-            price: 0.5
-        }
-    ]);
+    // const [groceryData, setGroceryData] = React.useState([]);
 
-    const [isLoading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState(null);
+    // const [isLoading, setLoading] = React.useState(false);
+    // const [error, setError] = React.useState(null);
+
+    const [dropdown, setDropdown] = React.useState("MDN");
+
+    const { groceryData, isLoading, error } = useGroceryFetch(dropdown);
+
 
     function handleAddTodoClicked(item) {
         const todoName = `Buy ${item.name} (${item.price.toFixed(2)})`;
@@ -34,53 +30,33 @@ export function GroceryPanel(props) {
         props.onAddTask(todoName);
     }
 
-    function toggleLoading() {
-        setLoading((prev) => !prev);
-    }
-
     function handleDropdownChange(event) {
-        setGroceryData({});
         if (!event.target.value) return;
-        fetchData(event.target.value);
+        setDropdown(event.target.value);
     }
-
-    async function fetchData(url) {
-        setError(null);
-        toggleLoading();
-        await delayMs(2000);
-        console.log("fetching data from " + url);
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`);
-              }
-            const data = await response.json();
-            setGroceryData(data); // Update state with new data
-        } catch (error) {
-            setError("Failed to fetch data");
-
-        }
-        toggleLoading();
-    }
+    
 
     return (
         <div>
             <h1 className="text-xl font-bold">Groceries prices today</h1>
             <label className="mb-4 flex gap-4">
                 Get prices from:
-                <select disabled={isLoading} onChange={handleDropdownChange} className="border border-gray-300 p-1 rounded-sm disabled:opacity-50">
-                    <option value="">(None selected)</option>
-                    <option value={MDN_URL}>MDN</option>
-                    <option value="invalid">Who knows?</option>
+                <select value={dropdown} onChange={handleDropdownChange} className="border border-gray-300 p-1 rounded-sm disabled:opacity-50">
+                    <option value="MDN">MDN</option>
+                    <option value="Liquor store">Liquor store</option>
+                    <option value="Butcher">Butcher</option>
+                    <option value="whoknows">Who knows?</option>
                 </select>
                 <Spinner isLoading={isLoading}></Spinner>
                 <p className="text-red-500">{error}</p>
             </label>
 
             {
-                groceryData.length > 0 ?
-                    <PriceTable items={groceryData} onAddClicked={handleAddTodoClicked} /> :
-                    "No data"
+                groceryData.length > 0 ? (
+                    <PriceTable items={groceryData} onAddClicked={handleAddTodoClicked} />
+                ) : (
+                    isLoading ? "Loading..." : "No data available"
+                )
             }
         </div>
     );

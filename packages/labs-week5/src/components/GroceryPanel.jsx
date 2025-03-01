@@ -1,8 +1,6 @@
 import React from "react";
 import { Spinner } from "./Spinner";
-import { groceryFetcher } from "./groceryFetcher";
-import { useEffect } from "react";
-
+import { useGroceryFetch } from "./useGroceryFetch";
 const MDN_URL = "https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json";
 
 /**
@@ -16,12 +14,15 @@ function delayMs(ms) {
 }
 
 export function GroceryPanel(props) {
-    const [groceryData, setGroceryData] = React.useState([]);
+    // const [groceryData, setGroceryData] = React.useState([]);
 
-    const [isLoading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState(null);
+    // const [isLoading, setLoading] = React.useState(false);
+    // const [error, setError] = React.useState(null);
 
     const [dropdown, setDropdown] = React.useState("MDN");
+
+    const { groceryData, isLoading, error } = useGroceryFetch(dropdown);
+
 
     function handleAddTodoClicked(item) {
         const todoName = `Buy ${item.name} (${item.price.toFixed(2)})`;
@@ -29,64 +30,10 @@ export function GroceryPanel(props) {
         props.onAddTask(todoName);
     }
 
-    function toggleLoading() {
-        setLoading((prev) => !prev);
-    }
-
     function handleDropdownChange(event) {
-        setGroceryData([]);
         if (!event.target.value) return;
-        // fetchData(event.target.value);
         setDropdown(event.target.value);
     }
-
-
-    async function doFetch() {
-        try {
-            const data = await groceryFetcher.fetch("MDN");
-            setGroceryData(data);
-        } catch (error) {
-            setError(error);
-        }
-        setLoading(false);
-    }
-
-    useEffect(() => {
-        let isStale = false;
-        async function fetchData(url) {
-            if (!isStale) {
-                setError(null);
-            }
-            if (!isStale){
-                setGroceryData([]);
-            }
-            if (!isStale){
-                setLoading(true);
-            }
-            console.log("fetching data from " + url);
-            try {
-                const response = await groceryFetcher.fetch(url);
-                if (!isStale){
-                    setGroceryData(response); // Update state with new data
-                }
-            } catch (error) {
-                if (!isStale){
-                    setError("Failed to fetch data");
-                }
-            }
-            if (!isStale){
-                setLoading(false);
-            }
-        }
-        if (dropdown === "MDN") {
-            doFetch(); // Fetch "MDN" data on first mount and when dropdown is set to "MDN"
-        } else {
-            fetchData(dropdown); // Fetch data based on the selected dropdown value
-        }
-        return () => {
-            isStale = true;
-        }
-    }, [dropdown]); // Runs when 'dropdown' changes
     
 
     return (
@@ -105,9 +52,11 @@ export function GroceryPanel(props) {
             </label>
 
             {
-                groceryData.length > 0 ?
-                    <PriceTable items={groceryData} onAddClicked={handleAddTodoClicked} /> :
-                    "No data"
+                groceryData.length > 0 ? (
+                    <PriceTable items={groceryData} onAddClicked={handleAddTodoClicked} />
+                ) : (
+                    isLoading ? "Loading..." : "No data available"
+                )
             }
         </div>
     );

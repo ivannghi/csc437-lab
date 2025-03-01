@@ -2,9 +2,9 @@ import { MainLayout } from "./MainLayout.jsx";
 
 export function Homepage(props) {
     return (
-        <MainLayout>
-            <h2>Welcome, {props.userName}</h2>
+        <div>
+            <h1>Welcome, {props.userName}</h1>
             <p>This is the content of the home page.</p>
-        </MainLayout>
+        </div>
     );
 }

@@ -3,22 +3,33 @@ import { AccountSettings } from "./AccountSettings";
 import { ImageGallery } from "./images/ImageGallery.jsx";
 import { ImageDetails } from "./images/ImageDetails.jsx";
 import { Route, Routes } from "react-router";
+import { useState } from "react";
+import { MainLayout } from "./MainLayout.jsx";
+import { useImageFetching } from "./images/useImageFetching.js";
 
 function App() {
+    const [userName, setUserName] = useState('');
     const POSSIBLE_PAGES = [
-        <Homepage userName="John Doe" />,
+        <Homepage userName={userName} />,
         <AccountSettings />,
         <ImageGallery />,
         <ImageDetails imageId="0" />
     ]
 
+    const { isLoading, fetchedImages } = useImageFetching("");
+    
+
     return (
         <Routes>
-            <Route path="/" element={<Homepage userName="John Doe" />} />
-            <Route path="/account" element={<AccountSettings />} />
-            <Route path="/images" element={<ImageGallery />} />
-            <Route path="/images/:imageId" element={<ImageDetails />} />  {/* This is the route for individual images */}           
-        </Routes>
+            <Route element={<MainLayout/>}>
+                <Route path="/" element={<Homepage userName={userName} />} />
+                <Route path="/account" element={<AccountSettings 
+                    userName = {userName}
+                    onNameChange = {setUserName} />} />
+                <Route path="/images" element={<ImageGallery isLoading={isLoading} fetchedImages={fetchedImages}/>} />
+                <Route path="/images/:imageId" element={<ImageDetails />} />  {/* This is the route for individual images */}           
+            </Route>
+                    </Routes>
         // POSSIBLE_PAGES[0]
     );
 }

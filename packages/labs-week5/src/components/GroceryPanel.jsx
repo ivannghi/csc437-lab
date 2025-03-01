@@ -1,5 +1,7 @@
 import React from "react";
 import { Spinner } from "./Spinner";
+import { groceryFetcher } from "./groceryFetcher";
+import { useEffect } from "react";
 
 const MDN_URL = "https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json";
 
@@ -14,19 +16,12 @@ function delayMs(ms) {
 }
 
 export function GroceryPanel(props) {
-    const [groceryData, setGroceryData] = React.useState([
-        {
-            name: "test item",
-            price: 12.3
-        },
-        {
-            name: "test item 2",
-            price: 0.5
-        }
-    ]);
+    const [groceryData, setGroceryData] = React.useState([]);
 
     const [isLoading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
+
+    const [dropdown, setDropdown] = React.useState("MDN");
 
     function handleAddTodoClicked(item) {
         const todoName = `Buy ${item.name} (${item.price.toFixed(2)})`;
@@ -39,39 +34,71 @@ export function GroceryPanel(props) {
     }
 
     function handleDropdownChange(event) {
-        setGroceryData({});
+        setGroceryData([]);
         if (!event.target.value) return;
-        fetchData(event.target.value);
+        // fetchData(event.target.value);
+        setDropdown(event.target.value);
     }
 
-    async function fetchData(url) {
-        setError(null);
-        toggleLoading();
-        await delayMs(2000);
-        console.log("fetching data from " + url);
+
+    async function doFetch() {
         try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`);
-              }
-            const data = await response.json();
-            setGroceryData(data); // Update state with new data
+            const data = await groceryFetcher.fetch("MDN");
+            setGroceryData(data);
         } catch (error) {
-            setError("Failed to fetch data");
-
+            setError(error);
         }
-        toggleLoading();
+        setLoading(false);
     }
+
+    useEffect(() => {
+        let isStale = false;
+        async function fetchData(url) {
+            if (!isStale) {
+                setError(null);
+            }
+            if (!isStale){
+                setGroceryData([]);
+            }
+            if (!isStale){
+                setLoading(true);
+            }
+            console.log("fetching data from " + url);
+            try {
+                const response = await groceryFetcher.fetch(url);
+                if (!isStale){
+                    setGroceryData(response); // Update state with new data
+                }
+            } catch (error) {
+                if (!isStale){
+                    setError("Failed to fetch data");
+                }
+            }
+            if (!isStale){
+                setLoading(false);
+            }
+        }
+        if (dropdown === "MDN") {
+            doFetch(); // Fetch "MDN" data on first mount and when dropdown is set to "MDN"
+        } else {
+            fetchData(dropdown); // Fetch data based on the selected dropdown value
+        }
+        return () => {
+            isStale = true;
+        }
+    }, [dropdown]); // Runs when 'dropdown' changes
+    
 
     return (
         <div>
             <h1 className="text-xl font-bold">Groceries prices today</h1>
             <label className="mb-4 flex gap-4">
                 Get prices from:
-                <select disabled={isLoading} onChange={handleDropdownChange} className="border border-gray-300 p-1 rounded-sm disabled:opacity-50">
-                    <option value="">(None selected)</option>
-                    <option value={MDN_URL}>MDN</option>
-                    <option value="invalid">Who knows?</option>
+                <select value={dropdown} onChange={handleDropdownChange} className="border border-gray-300 p-1 rounded-sm disabled:opacity-50">
+                    <option value="MDN">MDN</option>
+                    <option value="Liquor store">Liquor store</option>
+                    <option value="Butcher">Butcher</option>
+                    <option value="whoknows">Who knows?</option>
                 </select>
                 <Spinner isLoading={isLoading}></Spinner>
                 <p className="text-red-500">{error}</p>

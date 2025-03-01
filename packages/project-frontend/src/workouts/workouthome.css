@@ -1,0 +1,17 @@
+.outside {
+    display: flex;
+    flex-direction: row;
+    height: 90vh;
+    width: 100vw;
+}
+
+.sidebar {
+    justify-self: left;
+}
+
+.content {
+    flex-grow: 1;  /* Take up remaining space */
+    display: flex;
+    justify-content: center; 
+    padding: 2rem;
+}

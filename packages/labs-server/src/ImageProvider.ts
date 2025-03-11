@@ -25,7 +25,7 @@ interface DenormalizedImage {
 export class ImageProvider {
     constructor(private readonly mongoClient: MongoClient) {}
 
-    async getAllImages(): Promise<DenormalizedImage[]> {
+    async getAllImages(author?: string): Promise<DenormalizedImage[]> {
         const dbName = process.env.DB_NAME || "server";
         const imagesCollectionName = process.env.IMAGES_COLLECTION_NAME || "images";
         const usersCollectionName = process.env.USERS_COLLECTION_NAME || "users";
@@ -37,7 +37,15 @@ export class ImageProvider {
         const db = this.mongoClient.db(dbName);
         const imagesCollection = db.collection<WithId<ImageDocument>>(imagesCollectionName);
 
-        return imagesCollection.aggregate<DenormalizedImage>([
+        const pipeline: any[] = [];
+    
+        // Conditionally filter by author ID if provided
+        if (author) {
+            pipeline.push({ $match: { author: author } });
+        }
+    
+        // Join with users collection to fetch author details
+        pipeline.push(
             {
                 $lookup: {
                     from: usersCollectionName,
@@ -62,6 +70,28 @@ export class ImageProvider {
                     }
                 }
             }
-        ]).toArray();
+        );
+    
+        return imagesCollection.aggregate<DenormalizedImage>(pipeline).toArray();
+    }
+
+    async updateImageName(imageId: string, newName: string): Promise<number> {
+        const dbName = process.env.DB_NAME || "server";
+        const imagesCollectionName = process.env.IMAGES_COLLECTION_NAME || "images";
+    
+        if (!imagesCollectionName) {
+            throw new Error("Missing IMAGES_COLLECTION_NAME from environment variables");
+        }
+    
+        const db = this.mongoClient.db(dbName);
+        const imagesCollection = db.collection<WithId<ImageDocument>>(imagesCollectionName);
+
+        const result = await imagesCollection.updateOne(
+            { _id: imageId },
+            { $set: { name: newName } }
+        );
+        // console.log(result);
+    
+        return result.matchedCount;
     }
 }

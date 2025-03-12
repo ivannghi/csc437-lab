@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import { registerImageRoutes } from "./routes/images";
+import { registerAuthRoutes, verifyAuthToken } from "./routes/auth";
 
 async function setUpServer() {
     dotenv.config(); // Read the .env file in the current working directory, and load values into process.env.
@@ -27,6 +28,9 @@ async function setUpServer() {
         res.send("Hello, World");
     });
 
+    registerAuthRoutes(app, mongoClient);
+    app.use("/api/*", verifyAuthToken);
+    
     registerImageRoutes(app, mongoClient);
 
     app.get("*", (req: Request, res: Response) => {

@@ -6,6 +6,8 @@ import { Route, Routes } from "react-router";
 import { useState } from "react";
 import { MainLayout } from "./MainLayout.jsx";
 import { useImageFetching } from "./images/useImageFetching.js";
+import { RegisterPage } from "./auth/RegisterPage.jsx";
+import { LoginPage } from "./auth/LoginPage.jsx";
 
 function App() {
     const [userName, setUserName] = useState('');

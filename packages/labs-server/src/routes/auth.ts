@@ -15,7 +15,6 @@ export function verifyAuthToken(
     res: Response,
     next: NextFunction // Call next() to run the next middleware or request handler
 ) {
-    console.log(signatureKey);
     const authHeader = req.get("Authorization");
     // The header should say "Bearer <token string>".  Discard the Bearer part.
     const token = authHeader && authHeader.split(" ")[1];

@@ -6,31 +6,28 @@ import { Route, Routes } from "react-router";
 import { useState } from "react";
 import { MainLayout } from "./MainLayout.jsx";
 import { useImageFetching } from "./images/useImageFetching.js";
+import { RegisterPage } from "./auth/RegisterPage.jsx";
+import { LoginPage } from "./auth/LoginPage.jsx";
+import { ProtectedRoute } from "./auth/ProtectedRoute.jsx";
 
 function App() {
     const [userName, setUserName] = useState('');
-    const POSSIBLE_PAGES = [
-        <Homepage userName={userName} />,
-        <AccountSettings />,
-        <ImageGallery />,
-        <ImageDetails imageId="0" />
-    ]
-
-    const { isLoading, fetchedImages } = useImageFetching("");
-    
+    const [authToken, setAuthToken] = useState('');
+    const { isLoading, fetchedImages } = useImageFetching("", authToken);    
 
     return (
         <Routes>
             <Route element={<MainLayout/>}>
-                <Route path="/" element={<Homepage userName={userName} />} />
-                <Route path="/account" element={<AccountSettings 
-                    userName = {userName}
-                    onNameChange = {setUserName} />} />
-                <Route path="/images" element={<ImageGallery isLoading={isLoading} fetchedImages={fetchedImages}/>} />
-                <Route path="/images/:imageId" element={<ImageDetails />} />  {/* This is the route for individual images */}           
+                <Route path="/register" element={<RegisterPage onRegister={setAuthToken}/>} />
+                <Route path="/login" element={<LoginPage onLogin={setAuthToken} />} />
+                <Route element={<ProtectedRoute authToken={authToken} />}>
+                    <Route path="/" element={<Homepage userName={userName} />} />
+                    <Route path="/account" element={<AccountSettings userName={userName} onNameChange={setUserName} />} />
+                    <Route path="/images" element={<ImageGallery isLoading={isLoading} fetchedImages={fetchedImages} />} />
+                    <Route path="/images/:imageId" element={<ImageDetails authToken = {authToken}/>} />
+                </Route>           
             </Route>
-                    </Routes>
-        // POSSIBLE_PAGES[0]
+        </Routes>
     );
 }
 

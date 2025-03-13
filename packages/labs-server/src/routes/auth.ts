@@ -15,7 +15,6 @@ export function verifyAuthToken(
     res: Response,
     next: NextFunction // Call next() to run the next middleware or request handler
 ) {
-    console.log(signatureKey);
     const authHeader = req.get("Authorization");
     // The header should say "Bearer <token string>".  Discard the Bearer part.
     const token = authHeader && authHeader.split(" ")[1];
@@ -63,11 +62,18 @@ export function registerAuthRoutes(app: express.Application, mongoClient: MongoC
         
         if (!creds) {
             res.status(400).send({
-                error: "Username already taken."
+                error: "Bad request",
+                message: "Username already taken."
             })
         }
         else {
-            res.status(201).send();
+            const token = { // See token creation section below
+                username: username,
+                expirationDate: "1d",
+                signature: await generateAuthToken(username),
+            }
+            res.status(201).send({ token: token })
+
         }
     });
 
@@ -93,7 +99,8 @@ export function registerAuthRoutes(app: express.Application, mongoClient: MongoC
             res.status(200).send({ token: token })
         } else {
             res.status(401).send({
-                error: "Incorrect username or password"
+                error: "Bad request",
+                message: "Incorrect username or password"
             })
         }
     });

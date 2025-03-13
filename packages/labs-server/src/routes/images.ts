@@ -37,7 +37,7 @@ export function registerImageRoutes(app: express.Application, mongoClient: Mongo
             });
         }
         if (result == 1){
-            res.status(204).send()
+            res.status(204).send();
         }
     });
 };

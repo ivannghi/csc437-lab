@@ -8,6 +8,7 @@ async function setUpServer() {
     dotenv.config(); // Read the .env file in the current working directory, and load values into process.env.
     const PORT = process.env.PORT || 3000;
     const staticDir = process.env.STATIC_DIR || "public";
+    const IMAGE_UPLOAD_DIR = process.env.IMAGE_UPLOAD_DIR || "uploads";
 
     const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER, DB_NAME } = process.env;
 
@@ -22,6 +23,7 @@ async function setUpServer() {
 
     const app = express();
     app.use(express.static(staticDir));
+    app.use("/uploads", express.static(IMAGE_UPLOAD_DIR));
     app.use(express.json())
 
     app.get("/hello", (req: Request, res: Response) => {

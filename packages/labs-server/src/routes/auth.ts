@@ -23,6 +23,7 @@ export function verifyAuthToken(
     } else { // signatureKey already declared as a module-level variable
         jwt.verify(token, signatureKey, (error, decoded) => {
             if (decoded) {
+                res.locals.token = decoded;
                 next();
             } else {
                 res.status(401).end();

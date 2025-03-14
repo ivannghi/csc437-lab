@@ -6,7 +6,7 @@ interface Author {
     email: string;
 }
 
-interface ImageDocument {
+export interface ImageDocument {
     _id: string;
     src: string;
     name: string;
@@ -25,54 +25,28 @@ interface DenormalizedImage {
 export class ImageProvider {
     constructor(private readonly mongoClient: MongoClient) {}
 
-    async getAllImages(author?: string): Promise<DenormalizedImage[]> {
+    async getAllImages(author?: string): Promise<ImageDocument[]> {
         const dbName = process.env.DB_NAME || "server";
         const imagesCollectionName = process.env.IMAGES_COLLECTION_NAME || "images";
-        const usersCollectionName = process.env.USERS_COLLECTION_NAME || "users";
-
+    
         if (!imagesCollectionName) {
             throw new Error("Missing IMAGES_COLLECTION_NAME from environment variables");
         }
-
+    
         const db = this.mongoClient.db(dbName);
         const imagesCollection = db.collection<WithId<ImageDocument>>(imagesCollectionName);
-
-        const pipeline: any[] = [];
+    
+        const query: any = {};
     
         // Conditionally filter by author ID if provided
         if (author) {
-            pipeline.push({ $match: { author: author } });
+            query.author = author;
         }
     
-        // Join with users collection to fetch author details
-        pipeline.push(
-            {
-                $lookup: {
-                    from: usersCollectionName,
-                    localField: "author",
-                    foreignField: "_id",
-                    as: "authorDetails"
-                }
-            },
-            {
-                $unwind: "$authorDetails"
-            },
-            {
-                $project: {
-                    _id: 1,
-                    src: 1,
-                    name: 1,
-                    likes: 1,
-                    author: {
-                        _id: "$authorDetails._id",
-                        username: "$authorDetails.username",
-                        email: "$authorDetails.email"
-                    }
-                }
-            }
-        );
+        // Fetch images directly without denormalizing the author details
+        const images = await imagesCollection.find(query).toArray();
     
-        return imagesCollection.aggregate<DenormalizedImage>(pipeline).toArray();
+        return images;
     }
 
     async updateImageName(imageId: string, newName: string): Promise<number> {
@@ -93,5 +67,18 @@ export class ImageProvider {
         // console.log(result);
     
         return result.matchedCount;
+    }
+
+    async createImage(image: ImageDocument) {
+        const dbName = process.env.DB_NAME || "server";
+        const imagesCollectionName = process.env.IMAGES_COLLECTION_NAME || "images";
+
+        const db = this.mongoClient.db(dbName);
+        const imagesCollection = db.collection<WithId<ImageDocument>>(imagesCollectionName);
+
+        const result = await imagesCollection.insertOne(image);
+
+        return result;
+
     }
 }

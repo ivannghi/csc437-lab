@@ -23,7 +23,7 @@ function App() {
                 <Route element={<ProtectedRoute authToken={authToken} />}>
                     <Route path="/" element={<Homepage userName={userName} />} />
                     <Route path="/account" element={<AccountSettings userName={userName} onNameChange={setUserName} />} />
-                    <Route path="/images" element={<ImageGallery isLoading={isLoading} fetchedImages={fetchedImages} />} />
+                    <Route path="/images" element={<ImageGallery isLoading={isLoading} fetchedImages={fetchedImages} authToken={authToken} />} />
                     <Route path="/images/:imageId" element={<ImageDetails authToken = {authToken}/>} />
                 </Route>           
             </Route>

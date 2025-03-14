@@ -11,7 +11,7 @@ export async function sendPostRequest(url, payload) {
 
             throw new Error(errorText.message || "Request failed");
         }
-        console.log("in sendpostreq");
+        // console.log("in sendpostreq");
         // Handle empty body responses safely
         const text = await response.text();
         // console.log(text);

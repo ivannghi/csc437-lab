@@ -37,7 +37,7 @@ export function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            {error && <p className="error-message">{message}</p>}
+            {error && <p className="error-message">{error}</p>}
             <button onClick={ handleLoginButton }>
                 Login
             </button>

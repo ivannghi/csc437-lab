@@ -1,18 +1,16 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import {Route, Routes} from "react-router";
-import LoginPage from './pages/login';
-import HomePage from './pages/home';
-import WorkoutHome from './workouts/workouthome';
+import LoginPage from './pages/login.tsx';
+import HomePage from './pages/home.tsx';
+import WorkoutHome from './workouts/workouthome.tsx';
 import Layout from './navbar/Layout';
 import CaloriesHome from './calories/calorieshome';
-import BuildWorkoutPage from './workouts/buildWorkout';
-import WorkoutLayout from './workouts/WorkoutLayout';
-import PremadeWorkoutsPage from './workouts/premadeWorkouts';
-import FreeWorkout from './workouts/freeWorkout';
-import ViewPastPage from './workouts/pastWorkouts';
+import BuildWorkoutPage from './workouts/buildWorkout.tsx';
+import WorkoutLayout from './workouts/WorkoutLayout.tsx';
+import PremadeWorkoutsPage from './workouts/premadeWorkouts.tsx';
+import FreeWorkout from './workouts/freeWorkout.tsx';
+import ViewPastPage from './workouts/pastWorkouts.tsx';
 
 function App() {
   const [count, setCount] = useState(0)

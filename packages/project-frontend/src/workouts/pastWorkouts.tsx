@@ -9,41 +9,41 @@ const ViewPastPage = () => {
     const [error, setError] = useState(null);
 
     // Fetching completed workouts from Supabase
-    useEffect(() => {
-        const fetchWorkouts = async () => {
-            setLoading(true);
-            setError(null);
+    // useEffect(() => {
+    //     const fetchWorkouts = async () => {
+    //         setLoading(true);
+    //         setError(null);
 
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                setError('User not logged in.');
-                setLoading(false);
-                return;
-            }
+    //         const { data: { user } } = await supabase.auth.getUser();
+    //         if (!user) {
+    //             setError('User not logged in.');
+    //             setLoading(false);
+    //             return;
+    //         }
 
-            const { data, error } = await supabase
-                .from('completed_workouts')
-                .select('id, workout_name, created_at')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false });
+    //         const { data, error } = await supabase
+    //             .from('completed_workouts')
+    //             .select('id, workout_name, created_at')
+    //             .eq('user_id', user.id)
+    //             .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error('Error fetching workouts:', error);
-                setError('Failed to load previous workouts.');
-            } else {
-                setWorkouts(data);
-            }
+    //         if (error) {
+    //             console.error('Error fetching workouts:', error);
+    //             setError('Failed to load previous workouts.');
+    //         } else {
+    //             setWorkouts(data);
+    //         }
 
-            setLoading(false);
-        };
+    //         setLoading(false);
+    //     };
 
-        fetchWorkouts();
-    }, []);
+    //     fetchWorkouts();
+    // }, []);
 
-    // Navigate to Workout Details Page
-    const handleWorkoutClick = (workoutId) => {
-        navigate(`/view-workout/${workoutId}`);
-    };
+    // // Navigate to Workout Details Page
+    // const handleWorkoutClick = (workoutId) => {
+    //     navigate(`/view-workout/${workoutId}`);
+    // };
 
     // Navigate back to Workout Home
     const handleBackButton = () => {
@@ -63,8 +63,8 @@ const ViewPastPage = () => {
                 }}>
                     Previous Workouts
                 </h1>
-
-                {loading ? (
+                <p>Loading...</p>
+                {/* {loading ? (
                     <p>Loading...</p>
                 ) : error ? (
                     <p className="error-message">{error}</p>
@@ -86,7 +86,7 @@ const ViewPastPage = () => {
                             </li>
                         ))}
                     </ul>
-                )}
+                )} */}
             </div>
 
             <div className="fixed-bottom-left">

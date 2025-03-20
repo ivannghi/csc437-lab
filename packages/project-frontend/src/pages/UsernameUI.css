@@ -1,0 +1,73 @@
+/* Container to center the form */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the form */
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Input field styles */
+.input-field {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus effect on input fields */
+.input-field:focus {
+    border-color: #4caf50; /* Green border on focus */
+}
+
+/* Button styles */
+.submit-btn {
+    padding: 12px;
+    font-size: 1.1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the submit button */
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+/* Disabled state for buttons and inputs */
+input:disabled, button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+/* Error message styling */
+.error-message {
+    color: red;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Loading message styling */
+.loading-message {
+    color: #ffa500;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}

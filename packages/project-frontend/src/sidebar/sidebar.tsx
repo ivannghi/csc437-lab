@@ -2,7 +2,12 @@ import React from "react";
 import { Link } from "react-router"; // Ensure correct import
 import "./sidebar.css"; // Import styles
 
-const Sidebar = ({ links }) => {
+// Define prop types
+interface SidebarProps {
+    links: { path: string; label: string }[];
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ links }) => {
     return (
         <div className="sidebar">
             {links.map((link, index) => (

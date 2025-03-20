@@ -6,6 +6,8 @@ export async function sendPostRequest(url, payload) {
             body: JSON.stringify(payload),
         });
 
+        console.log(payload);
+    
         if (!response.ok) {
             const errorText = await response.json();  // Read error message safely
 

@@ -14,7 +14,7 @@ function WorkoutLayout() {
 
     return (
         <div className="outside">
-            <Sidebar className="sidebar" links={workoutLinks} />
+            <Sidebar links={workoutLinks} />
             <div className="content">
                 <Outlet />
             </div>

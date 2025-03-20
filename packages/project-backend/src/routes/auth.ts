@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-const signatureKey = process.env.JWT_SECRET as string;
+const signatureKey = process.env.JWT_SECRET as string | "anythingYouWantReally";
 if (!signatureKey) {
     throw new Error("Missing JWT_SECRET from env file");
 }

@@ -1,6 +1,6 @@
 import React, { useActionState, useState } from 'react';
 import { useNavigate } from 'react-router';
-import './buildworkout.css';
+import './buildWorkout.css';
 
 const BuildWorkoutPage = () => {
     const navigate = useNavigate();

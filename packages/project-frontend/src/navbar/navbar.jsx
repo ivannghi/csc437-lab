@@ -1,19 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router'; // Use 'react-router-dom' instead of 'react-router'
 import "./navbar.css";
 
 export function Navbar() {
+    const [isDarkMode, setIsDarkMode] = useState(false);
     const location = useLocation();
     
+    // Update the dark mode state based on localStorage (if previously set)
+    useEffect(() => {
+        const savedMode = localStorage.getItem('darkMode') === 'true';
+        setIsDarkMode(savedMode);
+        if (savedMode) {
+            document.body.classList.add('dark-mode');
+        }
+    }, []);
+
+    // Toggle dark mode
+    const toggleDarkMode = () => {
+        const newMode = !isDarkMode;
+        setIsDarkMode(newMode);
+        localStorage.setItem('darkMode', newMode.toString());
+        
+        if (newMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    };
+
     // Determine the heading based on the current page
     const getHeading = () => {
         switch (location.pathname) {
-            case "/home":
+            case "/":
                 return "Home Page";
             case "/workouthome":
                 return "Workouts";
-            case "/calorieshome":
-                return "Calories Tracker";
             default:
                 return "Welcome!";
         }
@@ -21,18 +42,21 @@ export function Navbar() {
 
     return (
         <nav className="navbar">
-            <h1 className="">{getHeading()}</h1>
+            <h1>{getHeading()}</h1>
+            
             <div className="nav-buttons">
+                <label>
+                    Dark Mode
+                    <input 
+                        type="checkbox" 
+                        checked={isDarkMode} 
+                        onChange={toggleDarkMode} 
+                    />
+                </label>
                 <Link
-                    to="/home"
-                    className={location.pathname ==='/home' ? "active-link" : ""}>
+                    to="/"
+                    className={location.pathname ==='/' ? "active-link" : ""}>
                         Home
-                </Link>
-                <Link 
-                    to='/calorieshome' 
-                    className={location.pathname === "/calorieshome" ? "active-link" : ""}
-                >
-                    Calories
                 </Link>
                 <Link 
                     to='/workouthome' 

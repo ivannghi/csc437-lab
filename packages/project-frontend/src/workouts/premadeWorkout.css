@@ -1,0 +1,58 @@
+/* Workout list container */
+.workout-list-container {
+    max-height: 65vh; 
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: clamp(8px, 1.5vw, 12px);
+    background: #f8f8f8;
+    width: 100%; 
+    text-align: center; 
+}
+
+/* Workout list items */
+
+.workout-item {
+    background: white;
+    padding: clamp(8px, 1vw, 12px);
+    margin-bottom: clamp(4px, 1vw, 8px);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: clamp(12px, 2vw, 18px);
+    text-align: center; /* Ensures text inside is centered */
+    gap: clamp(6px, 1.5vw, 10px);
+    width: 100%;
+}
+
+
+/* Buttons inside workout list */
+.workout-buttons {
+    display: flex;
+    gap: clamp(6px, 1.5vw, 10px);
+}
+
+/* Button styles */
+.interactive-btn {
+    border-radius: 4px;
+    padding: .5em;
+    transition: 0.3s;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effects */
+.bg-red-500:hover {
+    background-color: #dc2626; 
+}
+
+.bg-green-500:hover {
+    background-color: #16a34a; 
+}
+
+/* Optional: Add a slight scale effect on hover */
+.interactive-btn:hover {
+    transform: scale(1.05);
+}

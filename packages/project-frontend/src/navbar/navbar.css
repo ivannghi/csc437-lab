@@ -30,3 +30,67 @@
     color: white;
     font-weight: bold;
 }
+
+
+/* Default light theme */
+body {
+    background-color: #fafafa; /* Light background */
+    color: #333333; /* Darker text for better readability */
+}
+
+.navbar {
+    background-color: #ffffff; /* White background for navbar */
+    color: #333333; /* Dark text */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+}
+
+.nav-buttons a {
+    margin: 10px;
+    background-color: #007bff; /* Modern blue for buttons */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.nav-buttons a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Highlight the active link */
+.nav-buttons .active-link {
+    background-color: #28a745; /* Soft green for active links */
+    color: white;
+    font-weight: bold;
+}
+
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #181818; /* Dark background */
+    color: #2b16ed; /* Lighter text for contrast */
+}
+
+.navbar.dark-mode {
+    background-color: #333333; /* Dark background for navbar */
+    color: #f5f5f5; /* Light text */
+}
+
+.nav-buttons a {
+    background-color: #4e73df; /* Softer blue for dark mode */
+}
+
+.nav-buttons a:hover {
+    background-color: #2e59a0; /* Darker blue hover for dark mode */
+}
+
+/* Highlight the active link in dark mode */
+.nav-buttons .active-link {
+    background-color: #20c997; /* Bright green for active link */
+    color: white;
+    font-weight: bold;
+}

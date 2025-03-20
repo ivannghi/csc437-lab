@@ -1,97 +1,99 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { WorkoutInstance } from './useWorkoutFetching';
+import './pastWorkout.css';
+import { useSetFetching } from './useSetFetching';
 
+type WorkoutsPageProps = {
+    isLoading: boolean;
+    fetchedWorkouts: WorkoutInstance[];
+};
 
-const ViewPastPage = () => {
+const ViewPastPage: React.FC<WorkoutsPageProps> = ({ fetchedWorkouts, isLoading }) => {
     const navigate = useNavigate();
-    const [workouts, setWorkouts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [selectedWorkout, setSelectedWorkout] = useState<WorkoutInstance | null>(null);
 
-    // Fetching completed workouts from Supabase
-    // useEffect(() => {
-    //     const fetchWorkouts = async () => {
-    //         setLoading(true);
-    //         setError(null);
+    // Fetch sets when a workout is selected
+    const { isLoading: isLoadingSets, fetchedSets, error } = useSetFetching(selectedWorkout?._id);
 
-    //         const { data: { user } } = await supabase.auth.getUser();
-    //         if (!user) {
-    //             setError('User not logged in.');
-    //             setLoading(false);
-    //             return;
-    //         }
-
-    //         const { data, error } = await supabase
-    //             .from('completed_workouts')
-    //             .select('id, workout_name, created_at')
-    //             .eq('user_id', user.id)
-    //             .order('created_at', { ascending: false });
-
-    //         if (error) {
-    //             console.error('Error fetching workouts:', error);
-    //             setError('Failed to load previous workouts.');
-    //         } else {
-    //             setWorkouts(data);
-    //         }
-
-    //         setLoading(false);
-    //     };
-
-    //     fetchWorkouts();
-    // }, []);
-
-    // // Navigate to Workout Details Page
-    // const handleWorkoutClick = (workoutId) => {
-    //     navigate(`/view-workout/${workoutId}`);
-    // };
-
-    // Navigate back to Workout Home
     const handleBackButton = () => {
         navigate('/workouthome');
     };
 
+    // Handles clicking a workout to display details and fetch sets
+    const handleWorkoutClick = (workout: WorkoutInstance) => {
+        setSelectedWorkout(workout);
+    };
+
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            height: '100vh'
-        }}>
-            <div className="text-center p-8 bg-white rounded-lg shadow-lg w-full max-w-md">
-                <h1 style={{
-                    textAlign: 'center',
-                    marginBottom: '20px'
-                }}>
-                    Previous Workouts
-                </h1>
-                <p>Loading...</p>
-                {/* {loading ? (
-                    <p>Loading...</p>
-                ) : error ? (
-                    <p className="error-message">{error}</p>
-                ) : workouts.length === 0 ? (
-                    <p>No previous workouts found.</p>
-                ) : (
-                    <ul className="exercise-list">
-                        {workouts.map((workout) => (
-                            <li 
-                                key={workout.id} 
-                                className="exercise-item"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => handleWorkoutClick(workout.id)}
-                            >
-                                <strong>{workout.workout_name}</strong><br />
-                                <span style={{ color: '#888', fontSize: '0.9em' }}>
-                                    {new Date(workout.created_at).toLocaleDateString()}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                )} */}
+        <div className="workout-page-container">
+            {/* Main Workout List */}
+            <div className="workout-container">
+                <div className="workout-card">
+                    <h1 className="workout-title">Past Workouts</h1>
+
+                    <div className="workout-table-container">
+                        {isLoading ? (
+                            <p>Loading...</p>
+                        ) : fetchedWorkouts.length === 0 ? (
+                            <p>No previous workouts found.</p>
+                        ) : (
+                            <table className="workout-table">
+                                <thead>
+                                    <tr>
+                                        <th>Workout Name</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {fetchedWorkouts.map((workout) => (
+                                        <tr 
+                                            key={workout._id} 
+                                            className="workout-row"
+                                            onClick={() => handleWorkoutClick(workout)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <td>{workout.workout_name}</td>
+                                            <td>{new Date(workout.created_at).toLocaleDateString()}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+
+                    <div className="back-button-container">
+                        <button className="back-button" onClick={handleBackButton}>Back</button>
+                    </div>
+                </div>
             </div>
 
-            <div className="fixed-bottom-left">
-                <button onClick={handleBackButton}>Back</button>
-            </div>
+            {/* Workout Details Panel (Shown when a workout is selected) */}
+            {selectedWorkout && (
+                <div className="workout-details-panel">
+                    {isLoadingSets ? (
+                        <p>Loading sets...</p>
+                    ) : error ? (
+                        <p>{error}</p>
+                    ) : fetchedSets.length === 0 ? (
+                        <p>No sets found for this workout.</p>
+                    ) : (
+                        <div>
+                            <h2>Sets for {selectedWorkout.workout_name}</h2>
+                            <ul>
+                                {fetchedSets.map((set) => (
+                                    <li key={set._id}>
+                                        <p><strong>Exercise:</strong> {set.exercise_name}</p>
+                                        <p><strong>Reps:</strong> {set.reps}</p>
+                                        <p><strong>Weight:</strong> {set.weight} lbs</p>
+                                    </li>
+                                ))}
+                            </ul>
+                            <button className="close-button" onClick={() => setSelectedWorkout(null)}>Close</button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

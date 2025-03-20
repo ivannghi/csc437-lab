@@ -1,7 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { UsernamePasswordForm } from "./UsernamePasswordForm";
-import { sendPostRequest } from "./sendPostRequest";
+import { sendPostRequest } from "./sendPostRequest"; // Import the sendPostRequest utility
 
 type FormResult = {
     type: "success" | "error";
@@ -9,13 +9,11 @@ type FormResult = {
     color?: string;
 };
 
-type LoginResponse = { token: { signature: string } };
-
-interface LoginPageProps {
-    onLogin: (token: string) => void;
+interface RegisterPageProps {
+    onRegister: (token: string) => void; // Accept the onRegister prop
 }
 
-export function LoginPage({ onLogin }: LoginPageProps) {
+export function RegisterPage({ onRegister }: RegisterPageProps) {
     const navigate = useNavigate();
 
     async function handleSubmit(formData: FormData): Promise<FormResult> {
@@ -29,21 +27,26 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                 color: "red",
             };
         }
+        console.log(`Registering: ${username} and ${password}`);
 
         try {
-            const result = await sendPostRequest<LoginResponse>("/auth/login", { username, password });
-            onLogin(result.token.signature); // Pass token to parent component if needed
-            navigate("/"); // Redirect to home page
+            const result = await sendPostRequest<{ token: string }>("/auth/register", {
+                username,
+                password,
+            });
+            
+            onRegister(result.token); // Call onRegister with the token
+            navigate("/"); // Redirect after successful registration
 
             return {
                 type: "success",
-                message: "Login successful! Redirecting...",
+                message: "Registration successful! Redirecting...",
                 color: "green",
             };
         } catch (error) {
             return {
                 type: "error",
-                message: (error as Error).message || "Login failed, please try again.",
+                message: (error as Error).message || "An error occurred",
                 color: "red",
             };
         }
@@ -51,12 +54,12 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Register</h1>
             <UsernamePasswordForm onSubmit={handleSubmit} />
-            <p>Don't have an account?</p>
-            <Link to="/register">Register Here</Link>
+            <p>Already have an account?</p>
+            <Link to="/login">Login Here</Link>
         </div>
     );
 }
 
-export default LoginPage;
+export default RegisterPage;

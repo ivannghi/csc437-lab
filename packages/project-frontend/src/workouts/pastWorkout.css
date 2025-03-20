@@ -1,0 +1,143 @@
+/* General page container that holds both sections */
+.workout-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 80vh;  /* Ensure it fills the full screen */
+    gap: 20px; /* Space between workout list and details panel */
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+/* Main Workout List Container */
+.workout-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Ensures it fits the screen */
+    background-color: #f4f4f4;
+    padding: 20px;
+    flex: 1;
+}
+
+.workout-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Aligns content to the top */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    height: 70vh; /* Takes up most of the screen */
+    overflow: hidden;
+    padding: 20px;
+}
+
+.workout-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.workout-table-container {
+    overflow-y: auto; /* Enables scrolling if needed */
+    flex-grow: 1; /* Ensures the table fills available space */
+}
+
+.workout-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.workout-table th, .workout-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.workout-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+.workout-row {
+    transition: background 0.3s ease;
+}
+
+.workout-row:hover {
+    background: #f1f1f1;
+}
+
+/* Back Button Styling */
+.back-button-container {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+.back-button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.back-button:hover {
+    background: #0056b3;
+}
+
+/* Workout Details Panel */
+.workout-details-panel {
+    flex: 1;
+    max-width: 40%;
+    overflow-y: auto;
+    max-height: 70vh;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.workout-details-panel h2 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.workout-details-panel p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.workout-details-panel ul {
+    padding-left: 20px;
+}
+
+.workout-details-panel li {
+    list-style-type: disc;
+    margin-bottom: 5px;
+}
+
+.close-button {
+    margin-top: 10px;
+    background: #ff5b5b;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background: #d94444;
+}
+
+/* Fade-in animation for the details panel */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

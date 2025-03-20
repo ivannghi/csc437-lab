@@ -1,76 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useActionState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import './freeWorkout.css';
 import { useRef } from 'react';
 
 
 // Type for Set Entry
+// Type definition for a Set entry
+interface Set {
+    set_number: number;
+    exercise: string;
+    weight: number;
+    reps: number;
+}
+interface FreeWorkoutProps {
+    refreshWorkouts: () => void;
+}
 
-
-const FreeWorkout = () => {
+const FreeWorkout: React.FC<FreeWorkoutProps> = ({ refreshWorkouts }) => {
     const navigate = useNavigate();
     const location = useLocation(); // Track navigation changes
-    const [workoutName, setWorkoutName] = useState('');
-    const [selectedExercise, setSelectedExercise] = useState('');
-    const [weight, setWeight] = useState('');
-    const [reps, setReps] = useState('');
-    const [sets, setSets] = useState([]);
-    const [editingIndex, setEditingIndex] = useState(null);
-    const [error, setError] = useState('');
+    const [workoutName, setWorkoutName] = useState<string>('');  // Type: string
+    const [selectedExercise, setSelectedExercise] = useState<string>('');  // Type: string
+    const [weight, setWeight] = useState<string>('');  // Type: string
+    const [reps, setReps] = useState<string>('');  // Type: string
+    const [sets, setSets] = useState<Set[]>([]);  // Type: Set[]
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);  // Type: number or null
+    const [error, setError] = useState<string>('');  // Type: string
+    const [workoutID, setWorkoutID] = useState<string>('');
 
     const exercises = ['Bench Press', 'Squat', 'Deadlift', 'Pull-up', 'Overhead Press'];
 
     const hasRestoredSets = useRef(false);
-
-    // Reload saved data from localStorage on every navigation change
-    // useEffect(() => {
-    //     // Check if we've already restored sets to prevent infinite loop
-    //     if (hasRestoredSets.current) return;
-
-    //     const savedWorkoutName = localStorage.getItem('workoutName');
-    //     const savedSets = localStorage.getItem('sets');
-    //     if (savedWorkoutName) setWorkoutName(savedWorkoutName);
-
-    //     if (savedSets) {
-    //         try {
-    //             console.log("here");
-    //             const parsedSets = JSON.parse(savedSets);
-    //             if (Array.isArray(parsedSets)) {
-    //                 const restoredSets = [];
-
-    //                 // Loop through each saved set and add it to sets
-    //                 for (let i = 0; i < parsedSets.length; i++) {
-    //                     const set = parsedSets[i];
-    //                     console.log("Parsed Set: ", set);
-
-    //                     if (set.exercise && set.weight && set.reps) {
-    //                         const newSet = {
-    //                             id: Date.now() + i, // Add 'i' to ensure unique IDs
-    //                             exercise: set.exercise,
-    //                             weight: parseFloat(set.weight),
-    //                             reps: parseInt(set.reps)
-    //                         };
-
-    //                         restoredSets.push(newSet); // Push to temporary array
-    //                     }
-    //                 }
-
-    //                 console.log("restoredSets:", restoredSets);
-
-    //                 // Update state once after the loop
-    //                 setSets([...restoredSets]);
-
-    //                 // Mark as restored to prevent infinite loop
-    //                 hasRestoredSets.current = true;
-    //             }
-    //         } catch (error) {
-    //             console.error('Failed to parse saved sets:', error);
-    //             setSets([]);
-    //         }
-    //     }
-    // }, [location.key]);
-
-
 
     // Save workout name and sets to local storage whenever they change
     useEffect(() => {
@@ -78,108 +38,145 @@ const FreeWorkout = () => {
         localStorage.setItem('sets', JSON.stringify(sets));
     }, [workoutName, sets]);
 
-    // // Add new set
-    // const handleAddSet = () => {
-    //     if (selectedExercise && weight && reps) {
-    //         const newSet = {
-    //             id: Date.now(),
-    //             exercise: selectedExercise,
-    //             weight: parseFloat(weight),
-    //             reps: parseInt(reps)
-    //         };
+    // Add new set
+    const handleAddSet = () => {
+        if (selectedExercise && weight && reps) {
+            const newSet: Set = {
+                set_number: sets.length + 1, // Assign a number based on current set count
+                exercise: selectedExercise,
+                weight: parseFloat(weight),
+                reps: parseInt(reps),
+            };
+    
+            setSets([...sets, newSet]);
+            setWeight('');
+            setReps('');
+            setEditingIndex(null);
+            setError('');
+        } else {
+            setError('Please select an exercise and enter weight and reps.');
+        }    
+    };
 
-    //         setSets([...sets, newSet]);
-    //         setWeight('');
-    //         setReps('');
-    //         setEditingIndex(null);
-    //         setError('');
-    //     } else {
-    //         setError('Please select an exercise and enter weight and reps.');
-    //     }
-    // };
+    const handleFinishWorkout = async () => {
+        console.log("in handleStartWorkout");
+    
+        // Step 1: Validate inputs
+        if (!workoutName) {
+            setError("Please provide a workout name.");
+            return;
+        }
 
-    // // Edit existing set
-    // const handleEditSet = (index) => {
-    //     const setToEdit = sets[index];
-    //     setSelectedExercise(setToEdit.exercise);
-    //     setWeight(setToEdit.weight.toString());
-    //     setReps(setToEdit.reps.toString());
-    //     setEditingIndex(index);
-    // };
+        if (sets.length === 0) {
+            setError("Cannot save an empty workout. Add at least one set.");
+            return;
+        }
+    
+        // Step 2: Prepare the data to be sent
+        console.log(workoutName);
+        const workoutData = {
+            workout_name: workoutName,
+            created_at: new Date().toISOString(), // Add timestamp
+        };
+    
+        console.log("Submitting workout data:", workoutData);
+    
+        try {
+            // Step 3: Send the data to the backend via POST
+            const response = await fetch("/api/completedworkouts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(workoutData),  // Send as JSON
+            });
 
-    // // Save edited set
-    // const handleSaveEdit = () => {
-    //     if (editingIndex !== null && selectedExercise && weight && reps) {
-    //         const updatedSets = [...sets];
-    //         updatedSets[editingIndex] = {
-    //             id: Date.now(),
-    //             exercise: selectedExercise,
-    //             weight: parseFloat(weight),
-    //             reps: parseInt(reps)
-    //         };
-    //         setSets(updatedSets);
-    //         setEditingIndex(null);
-    //         setWeight('');
-    //         setReps('');
-    //     }
-    // };
+            console.log(response);
+    
+            if (!response.ok) {
+                const errorText = await response.text();  // Read error message safely
+                throw new Error(errorText || "Request failed");
+            }
+    
+            alert("Workout saved successfully!");
+            refreshWorkouts();
+            const result = await response.json();
+            console.log(result);
 
-    // // Delete a set
-    // const handleDeleteSet = (index) => {
-    //     setSets(sets.filter((_, i) => i !== index));
-    // };
+            setWorkoutID(result._id);
 
-    // // Save workout and sets to Supabase
-    // const handleEndWorkout = async () => {
-    //     if (!workoutName.trim()) {
-    //         alert('Please enter a workout name.');
-    //         return;
-    //     }
-    //     if (sets.length === 0) {
-    //         alert('Please add at least one set.');
-    //         return;
-    //     }
+            for (const set of sets) {
+                const setData = {
+                    completed_workout_id: workoutID, // Associate with workout
+                    exercise_name: set.exercise,
+                    set_number: set.set_number,
+                    weight: set.weight,
+                    reps: set.reps,
+                    created_at: new Date().toISOString(),
+                };
+                
+    
+                console.log("Submitting set data:", setData);
+    
+                const setResponse = await fetch("/api/completedsets", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(setData),
+                });
+    
+                if (!setResponse.ok) {
+                    throw new Error("Failed to save a set.");
+                }
+            }
+    
+            alert("Workout and sets saved successfully!");
 
-    //     const { data: { user } } = await supabase.auth.getUser();
-    //     if (!user) {
-    //         alert('User not logged in.');
-    //         return;
-    //     }
+        } catch (error2: any) {
+            console.error(error2);
+            setError(error2.message || "Failed to save workout, please try again.");
+        }
+    };
+    
 
-    //     const { data, error } = await supabase
-    //         .from('completed_workouts')
-    //         .insert([{ user_id: user.id, workout_name: workoutName }])
-    //         .select();
+    const [result, submitAction, isPending] = useActionState(
+        async () => {
+            return handleFinishWorkout();
+        },
+        null
+    );
 
-    //     if (error) {
-    //         console.error("Error saving workout:", error);
-    //         alert('Failed to save workout.');
-    //         return;
-    //     }
+    // Edit existing set
+    const handleEditSet = (index :number) => {
+        const setToEdit = sets[index];
+        setSelectedExercise(setToEdit.exercise);
+        setWeight(setToEdit.weight.toString());
+        setReps(setToEdit.reps.toString());
+        setEditingIndex(index);
+    };
 
-    //     const completedWorkoutId = data[0].id;
-    //     const setsData = sets.map((set, index) => ({
-    //         completed_workout_id: completedWorkoutId,
-    //         exercise_name: set.exercise,
-    //         set_number: index + 1,
-    //         weight: set.weight,
-    //         reps: set.reps
-    //     }));
+    // Save edited set
+    const handleSaveEdit = () => {
+        if (editingIndex !== null && selectedExercise && weight && reps) {
+            const updatedSets = [...sets];
+            updatedSets[editingIndex] = {
+                set_number: updatedSets[editingIndex].set_number,
+                exercise: selectedExercise,
+                weight: parseFloat(weight),
+                reps: parseInt(reps)
+            };
+            setSets(updatedSets);
+            setEditingIndex(null);
+            setWeight('');
+            setReps('');
+        }
+    };
 
-    //     const { error: setsError } = await supabase
-    //         .from('completed_sets')
-    //         .insert(setsData);
-
-    //     if (setsError) {
-    //         console.error("Error saving sets:", setsError);
-    //         alert('Failed to save sets.');
-    //     } else {
-    //         alert('Workout saved successfully!');
-    //         localStorage.removeItem('workoutName');
-    //         localStorage.removeItem('sets');
-    //         navigate('/workouthome');
-    //     }
-    // };
+    // Delete a set
+    const handleDeleteSet = (index : number) => {
+        setSets(sets.filter((_, i) => i !== index));
+    };
 
     // Confirmation and navigation for Back button
     const handleBackButton = () => {
@@ -221,7 +218,7 @@ const FreeWorkout = () => {
                 ))}
             </select>
 
-            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <div>
                 <input
                     type="number"
                     placeholder="Weight"
@@ -234,15 +231,15 @@ const FreeWorkout = () => {
                     value={reps}
                     onChange={(e) => setReps(e.target.value)}
                 />
-                {/* <button onClick={editingIndex !== null ? handleSaveEdit : handleAddSet}>
+                <button onClick={editingIndex !== null ? handleSaveEdit : handleAddSet}>
                     {editingIndex !== null ? "Save Edit" : "Add Set"}
-                </button> */}
+                </button>
             </div>
 
             <div className="set-list-container">
-                {/* <ul className="set-list">
+                <ul className="set-list">
                     {sets.map((set, index) => (
-                        <li key={set.id} className="set-item">
+                        <li key={set.set_number} className="set-item">
                             <span>{set.exercise}</span>
                             <span>{set.weight} lbs</span>
                             <span>{set.reps} reps</span>
@@ -250,15 +247,22 @@ const FreeWorkout = () => {
                             <button onClick={() => handleDeleteSet(index)}>Delete</button>
                         </li>
                     ))}
-                </ul> */}
+                </ul>
             </div>
 
-            <div className="fixed-bottom-left">
-                <button onClick={handleBackButton}>Back</button>
+            <div className="error-message">
+                {error && <p className="text-red-500 text-sm">{error}</p>}
             </div>
-            {/* <div className="fixed-bottom-right">
-                <button onClick={handleEndWorkout}>End Workout</button>
-            </div> */}
+            <div className="submit-btns">
+                <div className="interactive-btn bg-red-500 text-black">
+                    <button onClick={handleBackButton}>Back</button>
+                </div>
+                <div className="interactive-btn bg-green-500 text-black">
+                    <button onClick={submitAction} disabled={isPending}>
+                        {isPending ? "Saving..." : "End Workout"}
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
